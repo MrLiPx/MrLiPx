@@ -1,15 +1,17 @@
-name: generate animation
+name: generate-snake-game
 
 on:
   schedule:
-    # Runs every 12 hours
+    # Runs every 12 hours (10 AM and 10 PM in UTC+10)
     - cron: "0 */12 * * *"
   
+  # Allows manual triggers
   workflow_dispatch:
   
+  # Run on every push to the main branch
   push:
     branches:
-    - main
+      - main
 
 jobs:
   generate:
@@ -18,14 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     
+    # Ensures compatibility with the latest Node runtimes
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
+    
     steps:
-      # REQUIRED: This "logs in" to your repo so the action can work
-      - name: Checkout
-        uses: actions/checkout@v6
-
+      # Generates the snake animations from the contribution graph
       - name: generate-snake-game
         uses: Platane/snk@v3
         with:
@@ -37,6 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Pushes the generated files to the 'output' branch
       - name: push to output branch
         uses: crazy-max/ghaction-github-pages@v4
         with:
