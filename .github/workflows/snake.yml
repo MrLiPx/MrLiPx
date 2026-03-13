@@ -2,13 +2,11 @@ name: generate animation
 
 on:
   schedule:
-    # Runs every 12 hours (10 AM and 10 PM in UTC+10)
+    # Runs every 12 hours
     - cron: "0 */12 * * *"
   
-  # allows to manually run the job at any time
   workflow_dispatch:
   
-  # run on every push on the main branch
   push:
     branches:
     - main
@@ -20,11 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     
-    # Forces Node 24 to stop the 2026 deprecation warnings
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    
+
     steps:
+      # REQUIRED: This "logs in" to your repo so the action can work
+      - name: Checkout
+        uses: actions/checkout@v6
+
       - name: generate-snake-game
         uses: Platane/snk@v3
         with:
